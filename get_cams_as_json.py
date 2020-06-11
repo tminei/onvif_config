@@ -1,10 +1,19 @@
-from onvif import ONVIFCamera
 import subprocess
+import pyonvif
+# do this to install pyonvif to www-data
+# sudo mkdir /var/www/.local
+# sudo mkdir /var/www/.cache
+# sudo chown www-data.www-data /var/www/.local
+# sudo chown www-data.www-data /var/www/.cache
+# sudo -H -u www-data pip3 install pyonvif[discovery]
+
+
 import json
 
-goodPorts = ["8899", "80"]
+goodPorts = ["80", "8899"]
 
 
+#
 def net_scan():
     output = subprocess.check_output("nmap 192.168.1.*", shell=True).decode().splitlines()
     iList = []
@@ -33,10 +42,12 @@ def check_info(ipList, portList):
     for i in ipList:
         for j in portList:
             try:
-                mycam = ONVIFCamera(i, j, 'admin', 'admin1234', 'wsdl')
-                infoList.append([i, j, mycam.devicemgmt.GetDeviceInformation()])
+                mycam = pyonvif.OnvifCam(addr=i, port=80, usr='admin', pwd='admin1234')
+                raw = mycam.execute("GET_DEVICE_INFO").decode()
+                infoList.append([i, j, str(raw[raw.find("Manufacturer") + 13:raw.find("</tds:")])])
             except:
                 pass
+            break
     return infoList
 
 
@@ -46,9 +57,10 @@ def get_manufactured(info):
         tempDict = {}
         tempDict["ip"] = i[0]
         tempDict["port"] = i[1]
-        tempDict["manufacturer"] = i[2]["Manufacturer"]
+        tempDict["manufacturer"] = i[2]
         out_list.append(tempDict)
     return out_list
 
 
 print(json.dumps(get_manufactured(check_info(net_scan(), goodPorts))))
+# get_manufactured(check_info(net_scan(), goodPorts))
