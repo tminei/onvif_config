@@ -44,7 +44,8 @@ def check_info(ipList, portList):
             try:
                 mycam = pyonvif.OnvifCam(addr=i, port=80, usr='admin', pwd='admin1234')
                 raw = mycam.execute("GET_DEVICE_INFO").decode()
-                infoList.append([i, j, str(raw[raw.find("Manufacturer") + 13:raw.find("</tds:")])])
+                infoList.append([i, j, str(raw[raw.find("Manufacturer") + 13:raw.find("</tds:Manufacturer>")]),
+                                 str(raw[raw.find("SerialNumber") + 13:raw.find("</tds:SerialNumber>")])])
             except:
                 pass
             break
@@ -58,6 +59,10 @@ def get_manufactured(info):
         tempDict["ip"] = i[0]
         tempDict["port"] = i[1]
         tempDict["manufacturer"] = i[2]
+        try:
+            tempDict["serial"] = i[3]
+        except:
+            pass
         out_list.append(tempDict)
     return out_list
 

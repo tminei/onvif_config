@@ -14,7 +14,7 @@
             margin: 0;
         }
     </style>
-    <link href="style.css" rel="stylesheet" type="text/css">
+<!--    <link href="style.css" rel="stylesheet" type="text/css">-->
     <title>Project list</title>
 </head>
 <body>
@@ -23,9 +23,9 @@
 
     <input value="SCAN" type="submit" name="scan">
     <?php
-    //ini_set('error_reporting', E_ALL);
-    //ini_set('display_errors', 1);
-    //ini_set('display_startup_errors', 1);
+    ini_set('error_reporting', E_ALL);
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
 
     if (isset($_POST['scan'])) {
 
@@ -34,10 +34,10 @@
 
         $temp = json_decode($temp, true);
 //                        var_dump($temp);
-        echo "<tr><td  align='center' bgcolor='#f5deb3' style=' padding: 5px' colspan='3'>Found ONVIF device:</td></tr><tr><td  bgcolor='#dcdcdc' align='center' style='padding: 5px'>IP</td><td bgcolor='#dcdcdc' align='center' style='padding: 5px'>PORT</td><td  bgcolor='#dcdcdc' align='center' style='padding: 5px'>MANUFACTURER</td></tr>";
+        echo "<tr><td  align='center' bgcolor='#f5deb3' style=' padding: 5px' colspan='4'>Found ONVIF device:</td></tr><tr><td  bgcolor='#dcdcdc' align='center' style='padding: 5px'>IP</td><td bgcolor='#dcdcdc' align='center' style='padding: 5px'>PORT</td><td  bgcolor='#dcdcdc' align='center' style='padding: 5px'>MANUFACTURER</td><td  bgcolor='#dcdcdc' align='center' style='padding: 5px'>SERIAL</td></tr>";
         foreach ($temp as $t) {
             echo "<tr><td align='center' style='padding: 5px'>";
-            echo("<a href=\"http://" . $t["ip"] . "\">" . $t["ip"] . "</a></td ><td align='center' style='padding: 5px'>" . "" . $t["port"] . "</td><td align='center' style='padding: 5px'>" . $t["manufacturer"] . "</td>");
+            echo("<a href=\"http://" . $t["ip"] . "\">" . $t["ip"] . "</a></td ><td align='center' style='padding: 5px'>" . "" . $t["port"] . "</td><td align='center' style='padding: 5px'>" . $t["manufacturer"] . "</td><td align='center' style='padding: 5px'>". $t["serial"]."</td>");
 //            echo "<br>";
             echo "</td></tr>";
         }
