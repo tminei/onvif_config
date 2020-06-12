@@ -1,5 +1,5 @@
 # onvif_config
-# do this shit to install pyonvif to www-data:
+# do this shit to install pyonvif to www-data user:
 ```
 sudo mkdir /var/www/.local
 sudo mkdir /var/www/.cache
