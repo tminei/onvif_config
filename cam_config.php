@@ -127,8 +127,37 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
 
     if (isset($_POST['assign_save'])) {
         $temp = json_decode(file_get_contents($camAssignTemp, true), true);
-        var_dump($_POST);
-        var_dump($temp);
+//        var_dump($_POST);
+        $toAssign = [];
+//        var_dump($temp);
+        if (isset($_POST["CAM1_ASSIGN"]) and $_POST["CAM1_ASSIGN"] != "0") {
+            $toAssign["CAM1"] = [$temp[0]["manufacturer"], $temp[0]["ip"], $_POST["CAM1_ASSIGN"]];
+        }
+        if (isset($_POST["CAM2_ASSIGN"]) and $_POST["CAM2_ASSIGN"] != "0") {
+            $toAssign["CAM2"] = [$temp[1]["manufacturer"], $temp[1]["ip"], $_POST["CAM2_ASSIGN"]];
+        }
+        if (isset($_POST["CAM3_ASSIGN"]) and $_POST["CAM3_ASSIGN"] != "0") {
+            $toAssign["CAM3"] = [$temp[2]["manufacturer"], $temp[2]["ip"], $_POST["CAM3_ASSIGN"]];
+        }
+        if (isset($_POST["CAM4_ASSIGN"]) and $_POST["CAM4_ASSIGN"] != "0") {
+            $toAssign["CAM4"] = [$temp[3]["manufacturer"], $temp[3]["ip"], $_POST["CAM4_ASSIGN"]];
+        }
+
+        if (isset($toAssign["CAM1"])) {
+            if ($toAssign["CAM1"][0] == "Dahua") {
+                $temp = shell_exec('python3 /scr/scripts/cameras/set_ip_dahua.py ' . $toAssign["CAM1"][1] . ' ' . $toAssign["CAM1"][2]);
+            }
+            if ($toAssign["CAM2"][0] == "Dahua") {
+                $temp = shell_exec('python3 /scr/scripts/cameras/set_ip_dahua.py ' . $toAssign["CAM2"][1] . ' ' . $toAssign["CAM2"][2]);
+            }
+            if ($toAssign["CAM3"][0] == "Dahua") {
+                $temp = shell_exec('python3 /scr/scripts/cameras/set_ip_dahua.py ' . $toAssign["CAM3"][1] . ' ' . $toAssign["CAM3"][2]);
+            }
+            if ($toAssign["CAM4"][0] == "Dahua") {
+                $temp = shell_exec('python3 /scr/scripts/cameras/set_ip_dahua.py ' . $toAssign["CAM4"][1] . ' ' . $toAssign["CAM4"][2]);
+            }
+        }
+//        var_dump($toAssign);
     }
     if (isset($_POST['set_defaults'])) {
         $settingsArrayNew['CAM1_MAN'] = $_POST['CAM1_MAN'];
@@ -606,8 +635,8 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
                                             </button>
                                         </td>
                                         <td align="center">
-                                            <button style="width:120px;height:30px" type="submit" name="cam_scan"
-                                            >Scan network
+                                            <button style="width:140px;height:30px" type="submit" name="cam_scan">Scan
+                                                network
                                             </button>
                                         </td>
                                     </tr>
@@ -633,7 +662,7 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
                                         foreach ($temp as $t) {
                                             $cur_cam++;
 //                                            echo "<tr><td align='center' style='padding: 5px'><a href=\"http://" . $t["ip"] . "\"><b>" . $t["ip"] . "</b></a></td ><td align='center' style='padding: 5px'><input type='text' size='5' value=\"" . $t["manufacturer"] . "\"></td><td align='center' style='padding: 5px'>" . $t["serial"] . "</td><td align=\"center\"><select name=\"CAM" . $cur_cam . "_ASSIGN\"><option value=\"0\">――――</option><option value=\"1\">Camera 1</option><option value=\"2\">Camera 2</option><option value=\"3\">Camera 3</option><option value=\"4\">Camera 4</option></select></td></tr>";
-                                            echo "<tr><td align='center' style='padding: 5px'><a href=\"http://" . $t["ip"] . "\"><b>" . $t["ip"] . "</b></a></td ><td align='center' style='padding: 5px'><b>" . $t["manufacturer"] . "</b></td><td align='center' style='padding: 5px'>" . $t["serial"] . "</td><td align=\"center\"><select name=\"CAM" . $cur_cam . "_ASSIGN\"><option value=\"0\">――――</option><option value=\"1\">Camera 1</option><option value=\"2\">Camera 2</option><option value=\"3\">Camera 3</option><option value=\"4\">Camera 4</option></select></td></tr>";
+                                            echo "<tr><td align='center' style='padding: 5px'><a href=\"http://" . $t["ip"] . "\"><b>" . $t["ip"] . "</b></a></td ><td align='center' style='padding: 5px'><b>" . $t["manufacturer"] . "</b></td><td align='center' style='padding: 5px'>" . $t["serial"] . "</td><td align=\"center\"><select name=\"CAM" . $cur_cam . "_ASSIGN\"><option value=\"0\">――――</option><option value=\"192.168.1.10\">Camera 1</option><option value=\"192.168.1.11\">Camera 2</option><option value=\"192.168.1.12\">Camera 3</option><option value=\"192.168.1.13\">Camera 4</option></select></td></tr>";
 
                                         }
                                         echo "</tr><tr><td align='center' colspan='10'><button style=\"width:120px;height:30px\" type=\"submit\" name=\"assign_save\">Set state!</button></td></tr>";
