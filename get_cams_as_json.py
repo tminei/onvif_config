@@ -11,6 +11,7 @@ import pyonvif
 import json
 
 goodPorts = ["80", "8899"]
+passList = ["admin1234", ""]
 
 
 #
@@ -37,25 +38,20 @@ def net_scan():
     return goodList
 
 
-def check_info(ipList, portList):
+def check_info(ipList):
     infoList = []
     for i in ipList:
-        for j in portList:
-            try:
-                mycam = pyonvif.OnvifCam(addr=i, port=80, usr='admin', pwd='admin1234')
-                raw = mycam.execute("GET_DEVICE_INFO").decode()
-                infoList.append([i, j, str(raw[raw.find("Manufacturer") + 13:raw.find("</tds:Manufacturer>")]),
-                                 str(raw[raw.find("SerialNumber") + 13:raw.find("</tds:SerialNumber>")])])
-            except:
-                pass
-            try:
-                mycam = pyonvif.OnvifCam(addr=i, port=80, usr='admin', pwd='')
-                raw = mycam.execute("GET_DEVICE_INFO").decode()
-                infoList.append([i, j, str(raw[raw.find("Manufacturer") + 13:raw.find("</tds:Manufacturer>")]),
-                                 str(raw[raw.find("SerialNumber") + 13:raw.find("</tds:SerialNumber>")])])
-            except:
-                pass
-            break
+        for j in goodPorts:
+            for k in passList:
+                try:
+                    mycam = pyonvif.OnvifCam(addr=i, port=j, usr='admin', pwd=k)
+                    raw = mycam.execute("GET_DEVICE_INFO").decode()
+                    if not "The requested URL was not found on this server" in raw:
+                        infoList.append([i, j, str(raw[raw.find("Manufacturer") + 13:raw.find("</tds:Manufacturer>")]),
+                                         str(raw[raw.find("SerialNumber") + 13:raw.find("</tds:SerialNumber>")])])
+                except:
+                    pass
+                break
     return infoList
 
 
@@ -74,5 +70,5 @@ def get_manufactured(info):
     return out_list
 
 
-print(json.dumps(get_manufactured(check_info(net_scan(), goodPorts))))
+print(json.dumps(get_manufactured(check_info(net_scan()))))
 # get_manufactured(check_info(net_scan(), goodPorts))
