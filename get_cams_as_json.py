@@ -48,6 +48,13 @@ def check_info(ipList, portList):
                                  str(raw[raw.find("SerialNumber") + 13:raw.find("</tds:SerialNumber>")])])
             except:
                 pass
+            try:
+                mycam = pyonvif.OnvifCam(addr=i, port=80, usr='admin', pwd='')
+                raw = mycam.execute("GET_DEVICE_INFO").decode()
+                infoList.append([i, j, str(raw[raw.find("Manufacturer") + 13:raw.find("</tds:Manufacturer>")]),
+                                 str(raw[raw.find("SerialNumber") + 13:raw.find("</tds:SerialNumber>")])])
+            except:
+                pass
             break
     return infoList
 
