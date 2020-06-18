@@ -126,337 +126,311 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
     }
 
     if (isset($_POST['assign_save'])) {
-        $temp = json_decode(file_get_contents($camAssignTemp, true), true);
+        $settingsArrayNew = [];
+        $tempFile = json_decode(file_get_contents($camAssignTemp, true), true);
         $toAssign = [];
+        $settingsArrayNew["CAM1_STATE"] == "OFF";
+        $settingsArrayNew["CAM2_STATE"] == "OFF";
+        $settingsArrayNew["CAM3_STATE"] == "OFF";
+        $settingsArrayNew["CAM4_STATE"] == "OFF";
+        $settingsArrayNew["CAM1_AUDIO_STATE"] == "OFF";
+        $settingsArrayNew["CAM2_AUDIO_STATE"] == "OFF";
+        $settingsArrayNew["CAM3_AUDIO_STATE"] == "OFF";
+        $settingsArrayNew["CAM4_AUDIO_STATE"] == "OFF";
         if (isset($_POST["CAM1_ASSIGN"]) and $_POST["CAM1_ASSIGN"] != "0") {
-            $toAssign["CAM1"] = [$temp[0]["manufacturer"], $temp[0]["ip"], $_POST["CAM1_ASSIGN"]];
+            $toAssign["CAM1"] = [$tempFile[0]["manufacturer"], $tempFile[0]["ip"], $_POST["CAM1_ASSIGN"]];
+            if ($toAssign["CAM1"][2] == "192.168.1.10") {
+                $settingsArrayNew["CAM1_STATE"] = "ON";
+                $settingsArrayNew["CAM1_AUDIO_STATE"] = $_POST["CAM1_AUDIO_STATE"];
+            }
+            if ($toAssign["CAM1"][2] == "192.168.1.11") {
+                $settingsArrayNew["CAM2_STATE"] = "ON";
+                $settingsArrayNew["CAM1_AUDIO_STATE"] = $_POST["CAM2_AUDIO_STATE"];
+            }
+            if ($toAssign["CAM1"][2] == "192.168.1.12") {
+                $settingsArrayNew["CAM3_STATE"] = "ON";
+                $settingsArrayNew["CAM1_AUDIO_STATE"] = $_POST["CAM3_AUDIO_STATE"];
+            }
+            if ($toAssign["CAM1"][2] == "192.168.1.13") {
+                $settingsArrayNew["CAM4_STATE"] = "ON";
+                $settingsArrayNew["CAM1_AUDIO_STATE"] = $_POST["CAM4_AUDIO_STATE"];
+            }
         }
         if (isset($_POST["CAM2_ASSIGN"]) and $_POST["CAM2_ASSIGN"] != "0") {
-            $toAssign["CAM2"] = [$temp[1]["manufacturer"], $temp[1]["ip"], $_POST["CAM2_ASSIGN"]];
+            $toAssign["CAM2"] = [$tempFile[1]["manufacturer"], $tempFile[1]["ip"], $_POST["CAM2_ASSIGN"]];
+            if ($toAssign["CAM2"][2] == "192.168.1.10") {
+                $settingsArrayNew["CAM1_STATE"] = "ON";
+                $settingsArrayNew["CAM2_AUDIO_STATE"] = $_POST["CAM1_AUDIO_STATE"];
+            }
+            if ($toAssign["CAM2"][2] == "192.168.1.11") {
+                $settingsArrayNew["CAM2_STATE"] = "ON";
+                $settingsArrayNew["CAM2_AUDIO_STATE"] = $_POST["CAM2_AUDIO_STATE"];
+            }
+            if ($toAssign["CAM2"][2] == "192.168.1.12") {
+                $settingsArrayNew["CAM3_STATE"] = "ON";
+                $settingsArrayNew["CAM2_AUDIO_STATE"] = $_POST["CAM3_AUDIO_STATE"];
+            }
+            if ($toAssign["CAM2"][2] == "192.168.1.13") {
+                $settingsArrayNew["CAM4_STATE"] = "ON";
+                $settingsArrayNew["CAM2_AUDIO_STATE"] = $_POST["CAM4_AUDIO_STATE"];
+            }
         }
         if (isset($_POST["CAM3_ASSIGN"]) and $_POST["CAM3_ASSIGN"] != "0") {
-            $toAssign["CAM3"] = [$temp[2]["manufacturer"], $temp[2]["ip"], $_POST["CAM3_ASSIGN"]];
+            $toAssign["CAM3"] = [$tempFile[2]["manufacturer"], $tempFile[2]["ip"], $_POST["CAM3_ASSIGN"]];
+            if ($toAssign["CAM3"][2] == "192.168.1.10") {
+                $settingsArrayNew["CAM1_STATE"] = "ON";
+                $settingsArrayNew["CAM3_AUDIO_STATE"] = $_POST["CAM1_AUDIO_STATE"];
+            }
+            if ($toAssign["CAM3"][2] == "192.168.1.11") {
+                $settingsArrayNew["CAM2_STATE"] = "ON";
+                $settingsArrayNew["CAM3_AUDIO_STATE"] = $_POST["CAM2_AUDIO_STATE"];
+            }
+            if ($toAssign["CAM3"][2] == "192.168.1.12") {
+                $settingsArrayNew["CAM3_STATE"] = "ON";
+                $settingsArrayNew["CAM3_AUDIO_STATE"] = $_POST["CAM3_AUDIO_STATE"];
+            }
+            if ($toAssign["CAM3"][2] == "192.168.1.13") {
+                $settingsArrayNew["CAM4_STATE"] = "ON";
+                $settingsArrayNew["CAM3_AUDIO_STATE"] = $_POST["CAM4_AUDIO_STATE"];
+            }
         }
         if (isset($_POST["CAM4_ASSIGN"]) and $_POST["CAM4_ASSIGN"] != "0") {
-            $toAssign["CAM4"] = [$temp[3]["manufacturer"], $temp[3]["ip"], $_POST["CAM4_ASSIGN"]];
-        }
-
-        $settingsArrayNew['CAM1_IP'] = "192.168.1.10";
-        $settingsArrayNew['CAM2_IP'] = "192.168.1.11";
-        $settingsArrayNew['CAM3_IP'] = "192.168.1.12";
-        $settingsArrayNew['CAM4_IP'] = "192.168.1.13";
-
-
-        if (isset($toAssign["CAM1"])) {
-//            H264 is XM
-            $settingsArrayNew['CAM1_IP'] = $toAssign["CAM1"][2];
-            if ($toAssign["CAM1"][0] == "Dahua") {
-                $temp = shell_exec('python3 /scr/scripts/cameras/set_ip_dahua.py ' . $toAssign["CAM1"][1] . ' ' . $toAssign["CAM1"][2]);
-                $settingsArrayNew['CAM1_MAN'] = "DAHUA";
-            } elseif ($toAssign["CAM1"][0] == "H264") {
-                $temp = shell_exec('python3 /scr/scripts/cameras/set_ip_xm.py ' . $toAssign["CAM1"][1] . ' ' . $toAssign["CAM1"][2]);
-                $settingsArrayNew['CAM1_MAN'] = "XM";
-            } else {
-                $settingsArrayNew['CAM1_MAN'] = "OTHER";
+            $toAssign["CAM4"] = [$tempFile[3]["manufacturer"], $tempFile[3]["ip"], $_POST["CAM4_ASSIGN"]];
+            if ($toAssign["CAM4"][2] == "192.168.1.10") {
+                $settingsArrayNew["CAM1_STATE"] = "ON";
+                $settingsArrayNew["CAM4_AUDIO_STATE"] = $_POST["CAM1_AUDIO_STATE"];
             }
-        }
-        if (isset($toAssign["CAM2"])) {
-            $settingsArrayNew['CAM2_IP'] = $toAssign["CAM2"][2];
-            if ($toAssign["CAM2"][0] == "Dahua") {
-                $temp = shell_exec('python3 /scr/scripts/cameras/set_ip_dahua.py ' . $toAssign["CAM2"][1] . ' ' . $toAssign["CAM2"][2]);
-                $settingsArrayNew['CAM2_MAN'] = "DAHUA";
-            } elseif ($toAssign["CAM2"][0] == "H264") {
-                $temp = shell_exec('python3 /scr/scripts/cameras/set_ip_xm.py ' . $toAssign["CAM1"][1] . ' ' . $toAssign["CAM1"][2]);
-                $settingsArrayNew['CAM2_MAN'] = "XM";
-            } else {
-                $settingsArrayNew['CAM2_MAN'] = "OTHER";
+            if ($toAssign["CAM4"][2] == "192.168.1.11") {
+                $settingsArrayNew["CAM2_STATE"] = "ON";
+                $settingsArrayNew["CAM4_AUDIO_STATE"] = $_POST["CAM2_AUDIO_STATE"];
             }
-        }
-        if (isset($toAssign["CAM3"])) {
-            $settingsArrayNew['CAM3_IP'] = $toAssign["CAM3"][2];
-            if ($toAssign["CAM3"][0] == "Dahua") {
-                $temp = shell_exec('python3 /scr/scripts/cameras/set_ip_dahua.py ' . $toAssign["CAM3"][1] . ' ' . $toAssign["CAM3"][2]);
-                $settingsArrayNew['CAM3_MAN'] = "DAHUA";
-            } elseif ($toAssign["CAM3"][0] == "H264") {
-                $temp = shell_exec('python3 /scr/scripts/cameras/set_ip_xm.py ' . $toAssign["CAM1"][1] . ' ' . $toAssign["CAM1"][2]);
-                $settingsArrayNew['CAM3_MAN'] = "XM";
-            } else {
-                $settingsArrayNew['CAM3_MAN'] = "OTHER";
+            if ($toAssign["CAM4"][2] == "192.168.1.12") {
+                $settingsArrayNew["CAM3_STATE"] = "ON";
+                $settingsArrayNew["CAM4_AUDIO_STATE"] = $_POST["CAM3_AUDIO_STATE"];
             }
-        }
-        if (isset($toAssign["CAM4"])) {
-            $settingsArrayNew['CAM4_IP'] = $toAssign["CAM4"][2];
-            if ($toAssign["CAM4"][0] == "Dahua") {
-                $temp = shell_exec('python3 /scr/scripts/cameras/set_ip_dahua.py ' . $toAssign["CAM4"][1] . ' ' . $toAssign["CAM4"][2]);
-                $settingsArrayNew['CAM4_MAN'] = "DAHUA";
-            } elseif ($toAssign["CAM4"][0] == "H264") {
-                $temp = shell_exec('python3 /scr/scripts/cameras/set_ip_xm.py ' . $toAssign["CAM1"][1] . ' ' . $toAssign["CAM1"][2]);
-                $settingsArrayNew['CAM4_MAN'] = "XM";
-            } else {
-                $settingsArrayNew['CAM4_MAN'] = "OTHER";
+            if ($toAssign["CAM4"][2] == "192.168.1.13") {
+                $settingsArrayNew["CAM4_STATE"] = "ON";
+                $settingsArrayNew["CAM4_AUDIO_STATE"] = $_POST["CAM4_AUDIO_STATE"];
             }
         }
 
-        if ($settingsArrayNew['CAM1_IP'] == "192.168.1.10") {
-            if ($settingsArrayNew['CAM1_MAN'] == "XM") {
-                $settingsArrayNew['CAM1_LINK'] = "rtsp://192.168.1.10:554/user=admin&password=&channel=1&stream=0?.sdp";
-                $settingsArrayNew['CAM1_LOW_LINK'] = "rtsp://192.168.1.10:554/user=admin&password=&channel=1&stream=1?.sdp";
+        if ($toAssign["CAM1"][0] == "Dahua") {
+            if ($toAssign["CAM1"][2] == "192.168.1.10") {
+                $settingsArrayNew['CAM1_MAN'] = 'DAHUA';
             }
-            if ($settingsArrayNew['CAM1_MAN'] == "DAHUA") {
-                $settingsArrayNew['CAM1_LINK'] = "rtsp://admin:admin1234@192.168.1.10:554/cam/realmonitor?channel=1&subtype=0";
-                $settingsArrayNew['CAM1_LOW_LINK'] = "rtsp://admin:admin1234@192.168.1.10:554/cam/realmonitor?channel=1&subtype=1";
+            if ($toAssign["CAM1"][2] == "192.168.1.11") {
+                $settingsArrayNew['CAM2_MAN'] = 'DAHUA';
             }
-            if ($settingsArrayNew['CAM1_MAN'] == "OTHER") {
-                $settingsArrayNew['CAM1_LINK'] = "rtsp://admin:12345@192.168.1.10:554/ISAPI/Streaming/Channels/101";
-                $settingsArrayNew['CAM1_LOW_LINK'] = "rtsp://admin:12345@192.168.1.10:554/ISAPI/Streaming/Channels/102";
+            if ($toAssign["CAM1"][2] == "192.168.1.12") {
+                $settingsArrayNew['CAM3_MAN'] = 'DAHUA';
             }
-            
+            if ($toAssign["CAM1"][2] == "192.168.1.13") {
+                $settingsArrayNew['CAM4_MAN'] = 'DAHUA';
+            }
+            $temp = shell_exec('python3 /scr/scripts/cameras/set_ip_dahua.py ' . $toAssign["CAM1"][1] . ' ' . $toAssign["CAM1"][2]);
+        } elseif ($toAssign["CAM1"][0] == "H264") {
+            $temp = shell_exec('python3 /scr/scripts/cameras/set_ip_xm.py ' . $toAssign["CAM1"][1] . ' ' . $toAssign["CAM1"][2]);
+            if ($toAssign["CAM1"][2] == "192.168.1.10") {
+                $settingsArrayNew['CAM1_MAN'] = 'XM';
+            }
+            if ($toAssign["CAM1"][2] == "192.168.1.11") {
+                $settingsArrayNew['CAM2_MAN'] = 'XM';
+            }
+            if ($toAssign["CAM1"][2] == "192.168.1.12") {
+                $settingsArrayNew['CAM3_MAN'] = 'XM';
+            }
+            if ($toAssign["CAM1"][2] == "192.168.1.13") {
+                $settingsArrayNew['CAM4_MAN'] = 'XM';
+            }
+        } else {
+            if ($toAssign["CAM1"][2] == "192.168.1.10") {
+                $settingsArrayNew['CAM1_MAN'] = 'OTHER';
+            }
+            if ($toAssign["CAM1"][2] == "192.168.1.11") {
+                $settingsArrayNew['CAM2_MAN'] = 'OTHER';
+            }
+            if ($toAssign["CAM1"][2] == "192.168.1.12") {
+                $settingsArrayNew['CAM3_MAN'] = 'OTHER';
+            }
+            if ($toAssign["CAM1"][2] == "192.168.1.13") {
+                $settingsArrayNew['CAM4_MAN'] = 'OTHER';
+            }
         }
-        if ($settingsArrayNew['CAM1_IP'] == "192.168.1.11") {
-            if ($settingsArrayNew['CAM1_MAN'] == "XM") {
-                $settingsArrayNew['CAM1_LINK'] = "rtsp://192.168.1.11:554/user=admin&password=&channel=1&stream=0?.sdp";
-                $settingsArrayNew['CAM1_LOW_LINK'] = "rtsp://192.168.1.11:554/user=admin&password=&channel=1&stream=1?.sdp";
+        if ($toAssign["CAM2"][0] == "Dahua") {
+            $temp = shell_exec('python3 /scr/scripts/cameras/set_ip_dahua.py ' . $toAssign["CAM2"][1] . ' ' . $toAssign["CAM2"][2]);
+            if ($toAssign["CAM2"][2] == "192.168.1.10") {
+                $settingsArrayNew['CAM1_MAN'] = 'DAHUA';
             }
-            if ($settingsArrayNew['CAM1_MAN'] == "DAHUA") {
-                $settingsArrayNew['CAM1_LINK'] = "rtsp://admin:admin1234@192.168.1.11:554/cam/realmonitor?channel=1&subtype=0";
-                $settingsArrayNew['CAM1_LOW_LINK'] = "rtsp://admin:admin1234@192.168.1.11:554/cam/realmonitor?channel=1&subtype=1";
+            if ($toAssign["CAM2"][2] == "192.168.1.11") {
+                $settingsArrayNew['CAM2_MAN'] = 'DAHUA';
             }
-            if ($settingsArrayNew['CAM1_MAN'] == "OTHER") {
-                $settingsArrayNew['CAM1_LINK'] = "rtsp://admin:12345@192.168.1.11:554/ISAPI/Streaming/Channels/101";
-                $settingsArrayNew['CAM1_LOW_LINK'] = "rtsp://admin:12345@192.168.1.11:554/ISAPI/Streaming/Channels/102";
+            if ($toAssign["CAM2"][2] == "192.168.1.12") {
+                $settingsArrayNew['CAM3_MAN'] = 'DAHUA';
             }
-
+            if ($toAssign["CAM2"][2] == "192.168.1.13") {
+                $settingsArrayNew['CAM4_MAN'] = 'DAHUA';
+            }
+        } elseif ($toAssign["CAM2"][0] == "H264") {
+            $temp = shell_exec('python3 /scr/scripts/cameras/set_ip_xm.py ' . $toAssign["CAM1"][1] . ' ' . $toAssign["CAM1"][2]);
+            if ($toAssign["CAM2"][2] == "192.168.1.10") {
+                $settingsArrayNew['CAM1_MAN'] = 'XM';
+            }
+            if ($toAssign["CAM2"][2] == "192.168.1.11") {
+                $settingsArrayNew['CAM2_MAN'] = 'XM';
+            }
+            if ($toAssign["CAM2"][2] == "192.168.1.12") {
+                $settingsArrayNew['CAM3_MAN'] = 'XM';
+            }
+            if ($toAssign["CAM2"][2] == "192.168.1.13") {
+                $settingsArrayNew['CAM4_MAN'] = 'XM';
+            }
+        } else {
+            if ($toAssign["CAM2"][2] == "192.168.1.10") {
+                $settingsArrayNew['CAM1_MAN'] = 'OTHER';
+            }
+            if ($toAssign["CAM2"][2] == "192.168.1.11") {
+                $settingsArrayNew['CAM2_MAN'] = 'OTHER';
+            }
+            if ($toAssign["CAM2"][2] == "192.168.1.12") {
+                $settingsArrayNew['CAM3_MAN'] = 'OTHER';
+            }
+            if ($toAssign["CAM2"][2] == "192.168.1.13") {
+                $settingsArrayNew['CAM4_MAN'] = 'OTHER';
+            }
         }
-        if ($settingsArrayNew['CAM1_IP'] == "192.168.1.12") {
-            if ($settingsArrayNew['CAM1_MAN'] == "XM") {
-                $settingsArrayNew['CAM1_LINK'] = "rtsp://192.168.1.12:554/user=admin&password=&channel=1&stream=0?.sdp";
-                $settingsArrayNew['CAM1_LOW_LINK'] = "rtsp://192.168.1.12:554/user=admin&password=&channel=1&stream=1?.sdp";
+        if ($toAssign["CAM3"][0] == "Dahua") {
+            $temp = shell_exec('python3 /scr/scripts/cameras/set_ip_dahua.py ' . $toAssign["CAM3"][1] . ' ' . $toAssign["CAM3"][2]);
+            if ($toAssign["CAM3"][2] == "192.168.1.10") {
+                $settingsArrayNew['CAM1_MAN'] = 'DAHUA';
             }
-            if ($settingsArrayNew['CAM1_MAN'] == "DAHUA") {
-                $settingsArrayNew['CAM1_LINK'] = "rtsp://admin:admin1234@192.168.1.12:554/cam/realmonitor?channel=1&subtype=0";
-                $settingsArrayNew['CAM1_LOW_LINK'] = "rtsp://admin:admin1234@192.168.1.12:554/cam/realmonitor?channel=1&subtype=1";
+            if ($toAssign["CAM3"][2] == "192.168.1.11") {
+                $settingsArrayNew['CAM2_MAN'] = 'DAHUA';
             }
-            if ($settingsArrayNew['CAM1_MAN'] == "OTHER") {
-                $settingsArrayNew['CAM1_LINK'] = "rtsp://admin:12345@192.168.1.12:554/ISAPI/Streaming/Channels/101";
-                $settingsArrayNew['CAM1_LOW_LINK'] = "rtsp://admin:12345@192.168.1.12:554/ISAPI/Streaming/Channels/102";
+            if ($toAssign["CAM3"][2] == "192.168.1.12") {
+                $settingsArrayNew['CAM3_MAN'] = 'DAHUA';
             }
-
+            if ($toAssign["CAM3"][2] == "192.168.1.13") {
+                $settingsArrayNew['CAM4_MAN'] = 'DAHUA';
+            }
+        } elseif ($toAssign["CAM3"][0] == "H264") {
+            $temp = shell_exec('python3 /scr/scripts/cameras/set_ip_xm.py ' . $toAssign["CAM1"][1] . ' ' . $toAssign["CAM1"][2]);
+            if ($toAssign["CAM3"][2] == "192.168.1.10") {
+                $settingsArrayNew['CAM1_MAN'] = 'XM';
+            }
+            if ($toAssign["CAM3"][2] == "192.168.1.11") {
+                $settingsArrayNew['CAM2_MAN'] = 'XM';
+            }
+            if ($toAssign["CAM3"][2] == "192.168.1.12") {
+                $settingsArrayNew['CAM3_MAN'] = 'XM';
+            }
+            if ($toAssign["CAM3"][2] == "192.168.1.13") {
+                $settingsArrayNew['CAM4_MAN'] = 'XM';
+            }
+        } else {
+            if ($toAssign["CAM3"][2] == "192.168.1.10") {
+                $settingsArrayNew['CAM1_MAN'] = 'OTHER';
+            }
+            if ($toAssign["CAM3"][2] == "192.168.1.11") {
+                $settingsArrayNew['CAM2_MAN'] = 'OTHER';
+            }
+            if ($toAssign["CAM3"][2] == "192.168.1.12") {
+                $settingsArrayNew['CAM3_MAN'] = 'OTHER';
+            }
+            if ($toAssign["CAM3"][2] == "192.168.1.13") {
+                $settingsArrayNew['CAM4_MAN'] = 'OTHER';
+            }
         }
-
-        if ($settingsArrayNew['CAM1_IP'] == "192.168.1.13") {
-            if ($settingsArrayNew['CAM1_MAN'] == "XM") {
-                $settingsArrayNew['CAM1_LINK'] = "rtsp://192.168.1.13:554/user=admin&password=&channel=1&stream=0?.sdp";
-                $settingsArrayNew['CAM1_LOW_LINK'] = "rtsp://192.168.1.13:554/user=admin&password=&channel=1&stream=1?.sdp";
+        if ($toAssign["CAM4"][0] == "Dahua") {
+            $temp = shell_exec('python3 /scr/scripts/cameras/set_ip_dahua.py ' . $toAssign["CAM4"][1] . ' ' . $toAssign["CAM4"][2]);
+            if ($toAssign["CAM4"][2] == "192.168.1.10") {
+                $settingsArrayNew['CAM1_MAN'] = 'DAHUA';
             }
-            if ($settingsArrayNew['CAM1_MAN'] == "DAHUA") {
-                $settingsArrayNew['CAM1_LINK'] = "rtsp://admin:admin1234@192.168.1.13:554/cam/realmonitor?channel=1&subtype=0";
-                $settingsArrayNew['CAM1_LOW_LINK'] = "rtsp://admin:admin1234@192.168.1.13:554/cam/realmonitor?channel=1&subtype=1";
+            if ($toAssign["CAM4"][2] == "192.168.1.11") {
+                $settingsArrayNew['CAM2_MAN'] = 'DAHUA';
             }
-            if ($settingsArrayNew['CAM1_MAN'] == "OTHER") {
-                $settingsArrayNew['CAM1_LINK'] = "rtsp://admin:12345@192.168.1.13:554/ISAPI/Streaming/Channels/101";
-                $settingsArrayNew['CAM1_LOW_LINK'] = "rtsp://admin:12345@192.168.1.13:554/ISAPI/Streaming/Channels/102";
+            if ($toAssign["CAM4"][2] == "192.168.1.12") {
+                $settingsArrayNew['CAM3_MAN'] = 'DAHUA';
             }
-
+            if ($toAssign["CAM4"][2] == "192.168.1.13") {
+                $settingsArrayNew['CAM4_MAN'] = 'DAHUA';
+            }
+        } elseif ($toAssign["CAM4"][0] == "H264") {
+            $temp = shell_exec('python3 /scr/scripts/cameras/set_ip_xm.py ' . $toAssign["CAM1"][1] . ' ' . $toAssign["CAM1"][2]);
+            if ($toAssign["CAM4"][2] == "192.168.1.10") {
+                $settingsArrayNew['CAM1_MAN'] = 'XM';
+            }
+            if ($toAssign["CAM4"][2] == "192.168.1.11") {
+                $settingsArrayNew['CAM2_MAN'] = 'XM';
+            }
+            if ($toAssign["CAM4"][2] == "192.168.1.12") {
+                $settingsArrayNew['CAM3_MAN'] = 'XM';
+            }
+            if ($toAssign["CAM4"][2] == "192.168.1.13") {
+                $settingsArrayNew['CAM4_MAN'] = 'XM';
+            }
+        } else {
+            if ($toAssign["CAM4"][2] == "192.168.1.10") {
+                $settingsArrayNew['CAM4_MAN'] = 'OTHER';
+            }
+            if ($toAssign["CAM4"][2] == "192.168.1.11") {
+                $settingsArrayNew['CAM4_MAN'] = 'OTHER';
+            }
+            if ($toAssign["CAM4"][2] == "192.168.1.12") {
+                $settingsArrayNew['CAM4_MAN'] = 'OTHER';
+            }
+            if ($toAssign["CAM4"][2] == "192.168.1.13") {
+                $settingsArrayNew['CAM4_MAN'] = 'OTHER';
+            }
         }
-
-        if ($settingsArrayNew['CAM2_IP'] == "192.168.1.10") {
-            if ($settingsArrayNew['CAM2_MAN'] == "XM") {
-                $settingsArrayNew['CAM2_LINK'] = "rtsp://192.168.1.10:554/user=admin&password=&channel=1&stream=0?.sdp";
-                $settingsArrayNew['CAM2_LOW_LINK'] = "rtsp://192.168.1.10:554/user=admin&password=&channel=1&stream=1?.sdp";
-            }
-            if ($settingsArrayNew['CAM2_MAN'] == "DAHUA") {
-                $settingsArrayNew['CAM2_LINK'] = "rtsp://admin:admin1234@192.168.1.10:554/cam/realmonitor?channel=1&subtype=0";
-                $settingsArrayNew['CAM2_LOW_LINK'] = "rtsp://admin:admin1234@192.168.1.10:554/cam/realmonitor?channel=1&subtype=1";
-            }
-            if ($settingsArrayNew['CAM2_MAN'] == "OTHER") {
-                $settingsArrayNew['CAM2_LINK'] = "rtsp://admin:12345@192.168.1.10:554/ISAPI/Streaming/Channels/101";
-                $settingsArrayNew['CAM2_LOW_LINK'] = "rtsp://admin:12345@192.168.1.10:554/ISAPI/Streaming/Channels/102";
-            }
-
-        }
-        if ($settingsArrayNew['CAM2_IP'] == "192.168.1.11") {
-            if ($settingsArrayNew['CAM2_MAN'] == "XM") {
-                $settingsArrayNew['CAM2_LINK'] = "rtsp://192.168.1.11:554/user=admin&password=&channel=1&stream=0?.sdp";
-                $settingsArrayNew['CAM2_LOW_LINK'] = "rtsp://192.168.1.11:554/user=admin&password=&channel=1&stream=1?.sdp";
-            }
-            if ($settingsArrayNew['CAM2_MAN'] == "DAHUA") {
-                $settingsArrayNew['CAM2_LINK'] = "rtsp://admin:admin1234@192.168.1.11:554/cam/realmonitor?channel=1&subtype=0";
-                $settingsArrayNew['CAM2_LOW_LINK'] = "rtsp://admin:admin1234@192.168.1.11:554/cam/realmonitor?channel=1&subtype=1";
-            }
-            if ($settingsArrayNew['CAM2_MAN'] == "OTHER") {
-                $settingsArrayNew['CAM2_LINK'] = "rtsp://admin:12345@192.168.1.11:554/ISAPI/Streaming/Channels/101";
-                $settingsArrayNew['CAM2_LOW_LINK'] = "rtsp://admin:12345@192.168.1.11:554/ISAPI/Streaming/Channels/102";
-            }
-
-        }
-        if ($settingsArrayNew['CAM2_IP'] == "192.168.1.12") {
-            if ($settingsArrayNew['CAM2_MAN'] == "XM") {
-                $settingsArrayNew['CAM2_LINK'] = "rtsp://192.168.1.12:554/user=admin&password=&channel=1&stream=0?.sdp";
-                $settingsArrayNew['CAM2_LOW_LINK'] = "rtsp://192.168.1.12:554/user=admin&password=&channel=1&stream=1?.sdp";
-            }
-            if ($settingsArrayNew['CAM2_MAN'] == "DAHUA") {
-                $settingsArrayNew['CAM2_LINK'] = "rtsp://admin:admin1234@192.168.1.12:554/cam/realmonitor?channel=1&subtype=0";
-                $settingsArrayNew['CAM2_LOW_LINK'] = "rtsp://admin:admin1234@192.168.1.12:554/cam/realmonitor?channel=1&subtype=1";
-            }
-            if ($settingsArrayNew['CAM2_MAN'] == "OTHER") {
-                $settingsArrayNew['CAM2_LINK'] = "rtsp://admin:12345@192.168.1.12:554/ISAPI/Streaming/Channels/101";
-                $settingsArrayNew['CAM2_LOW_LINK'] = "rtsp://admin:12345@192.168.1.12:554/ISAPI/Streaming/Channels/102";
-            }
-
-        }
-
-        if ($settingsArrayNew['CAM2_IP'] == "192.168.1.13") {
-            if ($settingsArrayNew['CAM2_MAN'] == "XM") {
-                $settingsArrayNew['CAM2_LINK'] = "rtsp://192.168.1.13:554/user=admin&password=&channel=1&stream=0?.sdp";
-                $settingsArrayNew['CAM2_LOW_LINK'] = "rtsp://192.168.1.13:554/user=admin&password=&channel=1&stream=1?.sdp";
-            }
-            if ($settingsArrayNew['CAM2_MAN'] == "DAHUA") {
-                $settingsArrayNew['CAM2_LINK'] = "rtsp://admin:admin1234@192.168.1.13:554/cam/realmonitor?channel=1&subtype=0";
-                $settingsArrayNew['CAM2_LOW_LINK'] = "rtsp://admin:admin1234@192.168.1.13:554/cam/realmonitor?channel=1&subtype=1";
-            }
-            if ($settingsArrayNew['CAM2_MAN'] == "OTHER") {
-                $settingsArrayNew['CAM2_LINK'] = "rtsp://admin:12345@192.168.1.13:554/ISAPI/Streaming/Channels/101";
-                $settingsArrayNew['CAM2_LOW_LINK'] = "rtsp://admin:12345@192.168.1.13:554/ISAPI/Streaming/Channels/102";
-            }
-
-        }
-
-        if ($settingsArrayNew['CAM3_IP'] == "192.168.1.10") {
-            if ($settingsArrayNew['CAM3_MAN'] == "XM") {
-                $settingsArrayNew['CAM3_LINK'] = "rtsp://192.168.1.10:554/user=admin&password=&channel=1&stream=0?.sdp";
-                $settingsArrayNew['CAM3_LOW_LINK'] = "rtsp://192.168.1.10:554/user=admin&password=&channel=1&stream=1?.sdp";
-            }
-            if ($settingsArrayNew['CAM3_MAN'] == "DAHUA") {
-                $settingsArrayNew['CAM3_LINK'] = "rtsp://admin:admin1234@192.168.1.10:554/cam/realmonitor?channel=1&subtype=0";
-                $settingsArrayNew['CAM3_LOW_LINK'] = "rtsp://admin:admin1234@192.168.1.10:554/cam/realmonitor?channel=1&subtype=1";
-            }
-            if ($settingsArrayNew['CAM3_MAN'] == "OTHER") {
-                $settingsArrayNew['CAM3_LINK'] = "rtsp://admin:12345@192.168.1.10:554/ISAPI/Streaming/Channels/101";
-                $settingsArrayNew['CAM3_LOW_LINK'] = "rtsp://admin:12345@192.168.1.10:554/ISAPI/Streaming/Channels/102";
-            }
-
-        }
-        if ($settingsArrayNew['CAM3_IP'] == "192.168.1.11") {
-            if ($settingsArrayNew['CAM3_MAN'] == "XM") {
-                $settingsArrayNew['CAM3_LINK'] = "rtsp://192.168.1.11:554/user=admin&password=&channel=1&stream=0?.sdp";
-                $settingsArrayNew['CAM3_LOW_LINK'] = "rtsp://192.168.1.11:554/user=admin&password=&channel=1&stream=1?.sdp";
-            }
-            if ($settingsArrayNew['CAM3_MAN'] == "DAHUA") {
-                $settingsArrayNew['CAM3_LINK'] = "rtsp://admin:admin1234@192.168.1.11:554/cam/realmonitor?channel=1&subtype=0";
-                $settingsArrayNew['CAM3_LOW_LINK'] = "rtsp://admin:admin1234@192.168.1.11:554/cam/realmonitor?channel=1&subtype=1";
-            }
-            if ($settingsArrayNew['CAM3_MAN'] == "OTHER") {
-                $settingsArrayNew['CAM3_LINK'] = "rtsp://admin:12345@192.168.1.11:554/ISAPI/Streaming/Channels/101";
-                $settingsArrayNew['CAM3_LOW_LINK'] = "rtsp://admin:12345@192.168.1.11:554/ISAPI/Streaming/Channels/102";
-            }
-
-        }
-        if ($settingsArrayNew['CAM3_IP'] == "192.168.1.12") {
-            if ($settingsArrayNew['CAM3_MAN'] == "XM") {
-                $settingsArrayNew['CAM3_LINK'] = "rtsp://192.168.1.12:554/user=admin&password=&channel=1&stream=0?.sdp";
-                $settingsArrayNew['CAM3_LOW_LINK'] = "rtsp://192.168.1.12:554/user=admin&password=&channel=1&stream=1?.sdp";
-            }
-            if ($settingsArrayNew['CAM3_MAN'] == "DAHUA") {
-                $settingsArrayNew['CAM3_LINK'] = "rtsp://admin:admin1234@192.168.1.12:554/cam/realmonitor?channel=1&subtype=0";
-                $settingsArrayNew['CAM3_LOW_LINK'] = "rtsp://admin:admin1234@192.168.1.12:554/cam/realmonitor?channel=1&subtype=1";
-            }
-            if ($settingsArrayNew['CAM3_MAN'] == "OTHER") {
-                $settingsArrayNew['CAM3_LINK'] = "rtsp://admin:12345@192.168.1.12:554/ISAPI/Streaming/Channels/101";
-                $settingsArrayNew['CAM3_LOW_LINK'] = "rtsp://admin:12345@192.168.1.12:554/ISAPI/Streaming/Channels/102";
-            }
-
-        }
-
-        if ($settingsArrayNew['CAM3_IP'] == "192.168.1.13") {
-            if ($settingsArrayNew['CAM3_MAN'] == "XM") {
-                $settingsArrayNew['CAM3_LINK'] = "rtsp://192.168.1.13:554/user=admin&password=&channel=1&stream=0?.sdp";
-                $settingsArrayNew['CAM3_LOW_LINK'] = "rtsp://192.168.1.13:554/user=admin&password=&channel=1&stream=1?.sdp";
-            }
-            if ($settingsArrayNew['CAM3_MAN'] == "DAHUA") {
-                $settingsArrayNew['CAM3_LINK'] = "rtsp://admin:admin1234@192.168.1.13:554/cam/realmonitor?channel=1&subtype=0";
-                $settingsArrayNew['CAM3_LOW_LINK'] = "rtsp://admin:admin1234@192.168.1.13:554/cam/realmonitor?channel=1&subtype=1";
-            }
-            if ($settingsArrayNew['CAM3_MAN'] == "OTHER") {
-                $settingsArrayNew['CAM3_LINK'] = "rtsp://admin:12345@192.168.1.13:554/ISAPI/Streaming/Channels/101";
-                $settingsArrayNew['CAM3_LOW_LINK'] = "rtsp://admin:12345@192.168.1.13:554/ISAPI/Streaming/Channels/102";
-            }
-
+        if ($settingsArrayNew['CAM1_STATE'] == "OFF") {
+            $settingsArrayNew['CAM1_IP'] = $settingsArray['CAM1_IP'];
+            $settingsArrayNew['CAM1_LINK'] = $settingsArray['CAM1_LINK'];
+            $settingsArrayNew['CAM1_LOW_LINK'] = $settingsArray['CAM1_LOW_LINK'];
+        } else {
+            $settingsArrayNew['CAM1_IP'] = $_POST['CAM1_IP'];
+            $settingsArrayNew['CAM1_LINK'] = $_POST['CAM1_LINK'];
+            $settingsArrayNew['CAM1_LOW_LINK'] = $_POST['CAM1_LOW_LINK'];
         }
 
-        if ($settingsArrayNew['CAM4_IP'] == "192.168.1.10") {
-            if ($settingsArrayNew['CAM4_MAN'] == "XM") {
-                $settingsArrayNew['CAM4_LINK'] = "rtsp://192.168.1.10:554/user=admin&password=&channel=1&stream=0?.sdp";
-                $settingsArrayNew['CAM4_LOW_LINK'] = "rtsp://192.168.1.10:554/user=admin&password=&channel=1&stream=1?.sdp";
-            }
-            if ($settingsArrayNew['CAM4_MAN'] == "DAHUA") {
-                $settingsArrayNew['CAM4_LINK'] = "rtsp://admin:admin1234@192.168.1.10:554/cam/realmonitor?channel=1&subtype=0";
-                $settingsArrayNew['CAM4_LOW_LINK'] = "rtsp://admin:admin1234@192.168.1.10:554/cam/realmonitor?channel=1&subtype=1";
-            }
-            if ($settingsArrayNew['CAM4_MAN'] == "OTHER") {
-                $settingsArrayNew['CAM4_LINK'] = "rtsp://admin:12345@192.168.1.10:554/ISAPI/Streaming/Channels/101";
-                $settingsArrayNew['CAM4_LOW_LINK'] = "rtsp://admin:12345@192.168.1.10:554/ISAPI/Streaming/Channels/102";
-            }
-
-        }
-        if ($settingsArrayNew['CAM4_IP'] == "192.168.1.11") {
-            if ($settingsArrayNew['CAM4_MAN'] == "XM") {
-                $settingsArrayNew['CAM4_LINK'] = "rtsp://192.168.1.11:554/user=admin&password=&channel=1&stream=0?.sdp";
-                $settingsArrayNew['CAM4_LOW_LINK'] = "rtsp://192.168.1.11:554/user=admin&password=&channel=1&stream=1?.sdp";
-            }
-            if ($settingsArrayNew['CAM4_MAN'] == "DAHUA") {
-                $settingsArrayNew['CAM4_LINK'] = "rtsp://admin:admin1234@192.168.1.11:554/cam/realmonitor?channel=1&subtype=0";
-                $settingsArrayNew['CAM4_LOW_LINK'] = "rtsp://admin:admin1234@192.168.1.11:554/cam/realmonitor?channel=1&subtype=1";
-            }
-            if ($settingsArrayNew['CAM4_MAN'] == "OTHER") {
-                $settingsArrayNew['CAM4_LINK'] = "rtsp://admin:12345@192.168.1.11:554/ISAPI/Streaming/Channels/101";
-                $settingsArrayNew['CAM4_LOW_LINK'] = "rtsp://admin:12345@192.168.1.11:554/ISAPI/Streaming/Channels/102";
-            }
-
-        }
-        if ($settingsArrayNew['CAM4_IP'] == "192.168.1.12") {
-            if ($settingsArrayNew['CAM4_MAN'] == "XM") {
-                $settingsArrayNew['CAM4_LINK'] = "rtsp://192.168.1.12:554/user=admin&password=&channel=1&stream=0?.sdp";
-                $settingsArrayNew['CAM4_LOW_LINK'] = "rtsp://192.168.1.12:554/user=admin&password=&channel=1&stream=1?.sdp";
-            }
-            if ($settingsArrayNew['CAM4_MAN'] == "DAHUA") {
-                $settingsArrayNew['CAM4_LINK'] = "rtsp://admin:admin1234@192.168.1.12:554/cam/realmonitor?channel=1&subtype=0";
-                $settingsArrayNew['CAM4_LOW_LINK'] = "rtsp://admin:admin1234@192.168.1.12:554/cam/realmonitor?channel=1&subtype=1";
-            }
-            if ($settingsArrayNew['CAM4_MAN'] == "OTHER") {
-                $settingsArrayNew['CAM4_LINK'] = "rtsp://admin:12345@192.168.1.12:554/ISAPI/Streaming/Channels/101";
-                $settingsArrayNew['CAM4_LOW_LINK'] = "rtsp://admin:12345@192.168.1.12:554/ISAPI/Streaming/Channels/102";
-            }
-
+        if ($settingsArrayNew['CAM2_STATE'] == "OFF") {
+            $settingsArrayNew['CAM2_IP'] = $settingsArray['CAM2_IP'];
+            $settingsArrayNew['CAM2_LINK'] = $settingsArray['CAM2_LINK'];
+            $settingsArrayNew['CAM2_LOW_LINK'] = $settingsArray['CAM2_LOW_LINK'];
+        } else {
+            $settingsArrayNew['CAM2_IP'] = $_POST['CAM2_IP'];
+            $settingsArrayNew['CAM2_LINK'] = $_POST['CAM2_LINK'];
+            $settingsArrayNew['CAM2_LOW_LINK'] = $_POST['CAM2_LOW_LINK'];
         }
 
-        if ($settingsArrayNew['CAM4_IP'] == "192.168.1.13") {
-            if ($settingsArrayNew['CAM4_MAN'] == "XM") {
-                $settingsArrayNew['CAM4_LINK'] = "rtsp://192.168.1.13:554/user=admin&password=&channel=1&stream=0?.sdp";
-                $settingsArrayNew['CAM4_LOW_LINK'] = "rtsp://192.168.1.13:554/user=admin&password=&channel=1&stream=1?.sdp";
-            }
-            if ($settingsArrayNew['CAM4_MAN'] == "DAHUA") {
-                $settingsArrayNew['CAM4_LINK'] = "rtsp://admin:admin1234@192.168.1.13:554/cam/realmonitor?channel=1&subtype=0";
-                $settingsArrayNew['CAM4_LOW_LINK'] = "rtsp://admin:admin1234@192.168.1.13:554/cam/realmonitor?channel=1&subtype=1";
-            }
-            if ($settingsArrayNew['CAM4_MAN'] == "OTHER") {
-                $settingsArrayNew['CAM4_LINK'] = "rtsp://admin:12345@192.168.1.13:554/ISAPI/Streaming/Channels/101";
-                $settingsArrayNew['CAM4_LOW_LINK'] = "rtsp://admin:12345@192.168.1.13:554/ISAPI/Streaming/Channels/102";
-            }
-
+        if ($settingsArrayNew['CAM3_STATE'] == "OFF") {
+            $settingsArrayNew['CAM3_IP'] = $settingsArray['CAM3_IP'];
+            $settingsArrayNew['CAM3_LINK'] = $settingsArray['CAM3_LINK'];
+            $settingsArrayNew['CAM3_LOW_LINK'] = $settingsArray['CAM3_LOW_LINK'];
+        } else {
+            $settingsArrayNew['CAM3_IP'] = $_POST['CAM3_IP'];
+            $settingsArrayNew['CAM3_LINK'] = $_POST['CAM3_LINK'];
+            $settingsArrayNew['CAM3_LOW_LINK'] = $_POST['CAM3_LOW_LINK'];
         }
-
-
-
-
+        if ($settingsArrayNew['CAM4_STATE'] == "OFF") {
+            $settingsArrayNew['CAM4_IP'] = $settingsArray['CAM4_IP'];
+            $settingsArrayNew['CAM4_LINK'] = $settingsArray['CAM4_LINK'];
+            $settingsArrayNew['CAM4_LOW_LINK'] = $settingsArray['CAM4_LOW_LINK'];
+        } else {
+            $settingsArrayNew['CAM4_IP'] = $_POST['CAM4_IP'];
+            $settingsArrayNew['CAM4_LINK'] = $_POST['CAM4_LINK'];
+            $settingsArrayNew['CAM4_LOW_LINK'] = $_POST['CAM4_LOW_LINK'];
+        }
         file_put_contents($settingsFile, json_encode($settingsArrayNew));
         $settingsArrayNew['SETTINGS_TYPE'] = 'CAM';
         sendToTube("settings", json_encode($settingsArrayNew));
+
         $settings_saved_array = json_decode(file_get_contents($settings_saved, true), true);
         $settings_saved_array['CAM'] = date("d.m.y H:i:s P");
         file_put_contents($settings_saved, json_encode($settings_saved_array));
+
         header('Location: cam_config.php');
+
     }
-//        var_dump($toAssign)
     if (isset($_POST['set_defaults'])) {
         $settingsArrayNew['CAM1_MAN'] = $_POST['CAM1_MAN'];
         $settingsArrayNew['CAM2_MAN'] = $_POST['CAM2_MAN'];
