@@ -420,6 +420,60 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
             $settingsArrayNew['CAM4_LINK'] = $_POST['CAM4_LINK'];
             $settingsArrayNew['CAM4_LOW_LINK'] = $_POST['CAM4_LOW_LINK'];
         }
+
+        if ($settingsArrayNew['CAM1_MAN'] == "XM") {
+            $settingsArrayNew['CAM1_LINK'] = "rtsp://192.168.1.10:554/user=admin&password=&channel=1&stream=0?.sdp";
+            $settingsArrayNew['CAM1_LOW_LINK'] = "rtsp://192.168.1.10:554/user=admin&password=&channel=1&stream=1?.sdp";
+        }
+        if ($settingsArrayNew['CAM2_MAN'] == "XM") {
+            $settingsArrayNew['CAM2_LINK'] = "rtsp://192.168.1.11:554/user=admin&password=&channel=1&stream=0?.sdp";
+            $settingsArrayNew['CAM2_LOW_LINK'] = "rtsp://192.168.1.11:554/user=admin&password=&channel=1&stream=1?.sdp";
+        }
+        if ($settingsArrayNew['CAM3_MAN'] == "XM") {
+            $settingsArrayNew['CAM3_LINK'] = "rtsp://192.168.1.12:554/user=admin&password=&channel=1&stream=0?.sdp";
+            $settingsArrayNew['CAM3_LOW_LINK'] = "rtsp://192.168.1.12:554/user=admin&password=&channel=1&stream=1?.sdp";
+        }
+        if ($settingsArrayNew['CAM4_MAN'] == "XM") {
+            $settingsArrayNew['CAM4_LINK'] = "rtsp://192.168.1.13:554/user=admin&password=&channel=1&stream=0?.sdp";
+            $settingsArrayNew['CAM4_LOW_LINK'] = "rtsp://192.168.1.13:554/user=admin&password=&channel=1&stream=1?.sdp";
+        }
+
+        if ($settingsArrayNew['CAM1_MAN'] == "DAHUA") {
+            $settingsArrayNew['CAM1_LINK'] = "rtsp://admin:admin1234@192.168.1.10:554/cam/realmonitor?channel=1&subtype=0";
+            $settingsArrayNew['CAM1_LOW_LINK'] = "rtsp://admin:admin1234@192.168.1.10:554/cam/realmonitor?channel=1&subtype=1";
+        }
+        if ($settingsArrayNew['CAM2_MAN'] == "DAHUA") {
+            $settingsArrayNew['CAM2_LINK'] = "rtsp://admin:admin1234@192.168.1.11:554/cam/realmonitor?channel=1&subtype=0";
+            $settingsArrayNew['CAM2_LOW_LINK'] = "rtsp://admin:admin1234@192.168.1.11:554/cam/realmonitor?channel=1&subtype=1";
+        }
+        if ($settingsArrayNew['CAM3_MAN'] == "DAHUA") {
+            $settingsArrayNew['CAM3_LINK'] = "rtsp://admin:admin1234@192.168.1.12:554/cam/realmonitor?channel=1&subtype=0";
+            $settingsArrayNew['CAM3_LOW_LINK'] = "rtsp://admin:admin1234@192.168.1.12:554/cam/realmonitor?channel=1&subtype=1";
+        }
+        if ($settingsArrayNew['CAM4_MAN'] == "DAHUA") {
+            $settingsArrayNew['CAM4_LINK'] = "rtsp://admin:admin1234@192.168.1.13:554/cam/realmonitor?channel=1&subtype=0";
+            $settingsArrayNew['CAM4_LOW_LINK'] = "rtsp://admin:admin1234@192.168.1.13:554/cam/realmonitor?channel=1&subtype=1";
+        }
+
+        if ($settingsArrayNew['CAM1_MAN'] == "OTHER") {
+            $settingsArrayNew['CAM1_LINK'] = "rtsp://admin:12345@192.168.1.10:554/ISAPI/Streaming/Channels/101";
+            $settingsArrayNew['CAM1_LOW_LINK'] = "rtsp://admin:12345@192.168.1.10:554/ISAPI/Streaming/Channels/102";
+        }
+        if ($settingsArrayNew['CAM2_MAN'] == "OTHER") {
+            $settingsArrayNew['CAM2_LINK'] = "rtsp://admin:12345@192.168.1.11:554/ISAPI/Streaming/Channels/101";
+            $settingsArrayNew['CAM2_LOW_LINK'] = "rtsp://admin:12345@192.168.1.11:554/ISAPI/Streaming/Channels/102";
+        }
+        if ($settingsArrayNew['CAM3_MAN'] == "OTHER") {
+            $settingsArrayNew['CAM3_LINK'] = "rtsp://admin:12345@192.168.1.12:554/ISAPI/Streaming/Channels/101";
+            $settingsArrayNew['CAM3_LOW_LINK'] = "rtsp://admin:12345@192.168.1.12:554/ISAPI/Streaming/Channels/102";
+        }
+        if ($settingsArrayNew['CAM4_MAN'] == "OTHER") {
+            $settingsArrayNew['CAM4_LINK'] = "rtsp://admin:12345@192.168.1.13:554/ISAPI/Streaming/Channels/101";
+            $settingsArrayNew['CAM4_LOW_LINK'] = "rtsp://admin:12345@192.168.1.13:554/ISAPI/Streaming/Channels/102";
+        }
+
+
+
         file_put_contents($settingsFile, json_encode($settingsArrayNew));
         $settingsArrayNew['SETTINGS_TYPE'] = 'CAM';
         sendToTube("settings", json_encode($settingsArrayNew));
