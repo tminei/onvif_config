@@ -1,14 +1,18 @@
 from onvif import ONVIFCamera
 import zeep
 import re
-
+import sys
+login = str(sys.argv[1])
+password = str(sys.argv[2])
+port = str(sys.argv[3])
+ip = str(sys.argv[4])
 
 def zeep_pythonvalue(self, xmlvalue):
     return xmlvalue
 
 
 zeep.xsd.simple.AnySimpleType.pythonvalue = zeep_pythonvalue
-mycam = ONVIFCamera("192.168.1.10", "80", "admin", "admin1234", 'wsdl')
+mycam = ONVIFCamera(ip, port, login, password, 'wsdl')
 
 media_service = mycam.create_media_service()
 media_service.GetProfiles()
