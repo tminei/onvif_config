@@ -1,4 +1,7 @@
 # onvif_config
+```
+sudo pip3 install --upgrade onvif_zeep
+```
 # do this shit to install pyonvif to www-data user:
 ```
 sudo mkdir /var/www/.local
