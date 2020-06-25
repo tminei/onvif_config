@@ -1,7 +1,6 @@
 # onvif_config
 # do this:
 ```
-sudo -H pip3 install --upgrade onvif_zeep
 sudo mkdir /var/www/.local
 sudo mkdir /var/www/.cache
 sudo chown www-data.www-data /var/www/.local
