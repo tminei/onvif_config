@@ -31,6 +31,11 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
     $select_array['CAM3_MAN_DAHUA'] = '';
     $select_array['CAM4_MAN_DAHUA'] = '';
 
+    $select_array['CAM1_MAN_IPC'] = '';
+    $select_array['CAM2_MAN_IPC'] = '';
+    $select_array['CAM3_MAN_IPC'] = '';
+    $select_array['CAM4_MAN_IPC'] = '';
+
     $select_array['CAM1_MAN_OTHER'] = '';
     $select_array['CAM2_MAN_OTHER'] = '';
     $select_array['CAM3_MAN_OTHER'] = '';
@@ -43,6 +48,9 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
             break;
         case 'DAHUA':
             $select_array['CAM1_MAN_DAHUA'] = 'selected';
+            break;
+        case 'IPC':
+            $select_array['CAM1_MAN_IPC'] = 'selected';
             break;
         case 'OTHER':
             $select_array['CAM1_MAN_OTHER'] = 'selected';
@@ -57,6 +65,9 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
         case 'DAHUA':
             $select_array['CAM2_MAN_DAHUA'] = 'selected';
             break;
+        case 'IPC':
+            $select_array['CAM2_MAN_IPC'] = 'selected';
+            break;
         case 'OTHER':
             $select_array['CAM2_MAN_OTHER'] = 'selected';
             break;
@@ -70,6 +81,9 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
         case 'DAHUA':
             $select_array['CAM3_MAN_DAHUA'] = 'selected';
             break;
+        case 'IPC':
+            $select_array['CAM3_MAN_IPC'] = 'selected';
+            break;
         case 'OTHER':
             $select_array['CAM3_MAN_OTHER'] = 'selected';
             break;
@@ -82,6 +96,9 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
             break;
         case 'DAHUA':
             $select_array['CAM4_MAN_DAHUA'] = 'selected';
+            break;
+        case 'IPC':
+            $select_array['CAM4_MAN_IPC'] = 'selected';
             break;
         case 'OTHER':
             $select_array['CAM4_MAN_OTHER'] = 'selected';
@@ -227,6 +244,8 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
             if ($toAssign["CAM1"][2] == "192.168.1.13") {
                 $settingsArrayNew['CAM4_MAN'] = 'DAHUA';
             }
+//            python3 onvif_set_ip.py admin admin1234 80 192.168.1.11 192.168.1.12
+//            onvif_set_ip.py admin admin1234 80 --> onvif_set_ip.py admin admin1234 80
             $temp = shell_exec('python3 /scr/scripts/cameras/set_ip_dahua.py ' . $toAssign["CAM1"][1] . ' ' . $toAssign["CAM1"][2]);
         } elseif ($toAssign["CAM1"][0] == "H264") {
             $temp = shell_exec('python3 /scr/scripts/cameras/set_ip_xm.py ' . $toAssign["CAM1"][1] . ' ' . $toAssign["CAM1"][2]);
@@ -241,6 +260,20 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
             }
             if ($toAssign["CAM1"][2] == "192.168.1.13") {
                 $settingsArrayNew['CAM4_MAN'] = 'XM';
+            }
+        } elseif ($toAssign["CAM1"][0] == "IPC") {
+            $temp = shell_exec('sudo bash /scr/scripts/cameras/onvif_set_ip.sh 12345 80 ' . $toAssign["CAM1"][1] . ' ' . $toAssign["CAM1"][2]);
+            if ($toAssign["CAM1"][2] == "192.168.1.10") {
+                $settingsArrayNew['CAM1_MAN'] = 'IPC';
+            }
+            if ($toAssign["CAM1"][2] == "192.168.1.11") {
+                $settingsArrayNew['CAM2_MAN'] = 'IPC';
+            }
+            if ($toAssign["CAM1"][2] == "192.168.1.12") {
+                $settingsArrayNew['CAM3_MAN'] = 'IPC';
+            }
+            if ($toAssign["CAM1"][2] == "192.168.1.13") {
+                $settingsArrayNew['CAM4_MAN'] = 'IPC';
             }
         } else {
             if ($toAssign["CAM1"][2] == "192.168.1.10") {
@@ -271,7 +304,7 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
                 $settingsArrayNew['CAM4_MAN'] = 'DAHUA';
             }
         } elseif ($toAssign["CAM2"][0] == "H264") {
-            $temp = shell_exec('python3 /scr/scripts/cameras/set_ip_xm.py ' . $toAssign["CAM1"][1] . ' ' . $toAssign["CAM1"][2]);
+            $temp = shell_exec('python3 /scr/scripts/cameras/set_ip_xm.py ' . $toAssign["CAM2"][1] . ' ' . $toAssign["CAM2"][2]);
             if ($toAssign["CAM2"][2] == "192.168.1.10") {
                 $settingsArrayNew['CAM1_MAN'] = 'XM';
             }
@@ -283,6 +316,20 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
             }
             if ($toAssign["CAM2"][2] == "192.168.1.13") {
                 $settingsArrayNew['CAM4_MAN'] = 'XM';
+            }
+        } elseif ($toAssign["CAM2"][0] == "IPC") {
+            $temp = shell_exec('sudo bash /scr/scripts/cameras/onvif_set_ip.sh 12345 80 ' . $toAssign["CAM2"][1] . ' ' . $toAssign["CAM2"][2]);
+            if ($toAssign["CAM2"][2] == "192.168.1.10") {
+                $settingsArrayNew['CAM1_MAN'] = 'IPC';
+            }
+            if ($toAssign["CAM2"][2] == "192.168.1.11") {
+                $settingsArrayNew['CAM2_MAN'] = 'IPC';
+            }
+            if ($toAssign["CAM2"][2] == "192.168.1.12") {
+                $settingsArrayNew['CAM3_MAN'] = 'IPC';
+            }
+            if ($toAssign["CAM2"][2] == "192.168.1.13") {
+                $settingsArrayNew['CAM4_MAN'] = 'IPC';
             }
         } else {
             if ($toAssign["CAM2"][2] == "192.168.1.10") {
@@ -313,7 +360,7 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
                 $settingsArrayNew['CAM4_MAN'] = 'DAHUA';
             }
         } elseif ($toAssign["CAM3"][0] == "H264") {
-            $temp = shell_exec('python3 /scr/scripts/cameras/set_ip_xm.py ' . $toAssign["CAM1"][1] . ' ' . $toAssign["CAM1"][2]);
+            $temp = shell_exec('python3 /scr/scripts/cameras/set_ip_xm.py ' . $toAssign["CAM3"][1] . ' ' . $toAssign["CAM3"][2]);
             if ($toAssign["CAM3"][2] == "192.168.1.10") {
                 $settingsArrayNew['CAM1_MAN'] = 'XM';
             }
@@ -325,6 +372,20 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
             }
             if ($toAssign["CAM3"][2] == "192.168.1.13") {
                 $settingsArrayNew['CAM4_MAN'] = 'XM';
+            }
+        } elseif ($toAssign["CAM3"][0] == "IPC") {
+            $temp = shell_exec('sudo bash /scr/scripts/cameras/onvif_set_ip.sh 12345 80 ' . $toAssign["CAM3"][1] . ' ' . $toAssign["CAM3"][2]);
+            if ($toAssign["CAM3"][2] == "192.168.1.10") {
+                $settingsArrayNew['CAM1_MAN'] = 'IPC';
+            }
+            if ($toAssign["CAM3"][2] == "192.168.1.11") {
+                $settingsArrayNew['CAM2_MAN'] = 'IPC';
+            }
+            if ($toAssign["CAM3"][2] == "192.168.1.12") {
+                $settingsArrayNew['CAM3_MAN'] = 'IPC';
+            }
+            if ($toAssign["CAM3"][2] == "192.168.1.13") {
+                $settingsArrayNew['CAM4_MAN'] = 'IPC';
             }
         } else {
             if ($toAssign["CAM3"][2] == "192.168.1.10") {
@@ -355,7 +416,7 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
                 $settingsArrayNew['CAM4_MAN'] = 'DAHUA';
             }
         } elseif ($toAssign["CAM4"][0] == "H264") {
-            $temp = shell_exec('python3 /scr/scripts/cameras/set_ip_xm.py ' . $toAssign["CAM1"][1] . ' ' . $toAssign["CAM1"][2]);
+            $temp = shell_exec('python3 /scr/scripts/cameras/set_ip_xm.py ' . $toAssign["CAM4"][1] . ' ' . $toAssign["CAM4"][2]);
             if ($toAssign["CAM4"][2] == "192.168.1.10") {
                 $settingsArrayNew['CAM1_MAN'] = 'XM';
             }
@@ -367,6 +428,20 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
             }
             if ($toAssign["CAM4"][2] == "192.168.1.13") {
                 $settingsArrayNew['CAM4_MAN'] = 'XM';
+            }
+        } elseif ($toAssign["CAM4"][0] == "IPC") {
+            $temp = shell_exec('sudo bash /scr/scripts/cameras/onvif_set_ip.sh 12345 80 ' . $toAssign["CAM4"][1] . ' ' . $toAssign["CAM4"][2]);
+            if ($toAssign["CAM4"][2] == "192.168.1.10") {
+                $settingsArrayNew['CAM1_MAN'] = 'IPC';
+            }
+            if ($toAssign["CAM4"][2] == "192.168.1.11") {
+                $settingsArrayNew['CAM2_MAN'] = 'IPC';
+            }
+            if ($toAssign["CAM4"][2] == "192.168.1.12") {
+                $settingsArrayNew['CAM3_MAN'] = 'IPC';
+            }
+            if ($toAssign["CAM4"][2] == "192.168.1.13") {
+                $settingsArrayNew['CAM4_MAN'] = 'IPC';
             }
         } else {
             if ($toAssign["CAM4"][2] == "192.168.1.10") {
@@ -437,7 +512,22 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
             $settingsArrayNew['CAM4_LINK'] = "rtsp://192.168.1.13:554/user=admin&password=&channel=1&stream=0?.sdp";
             $settingsArrayNew['CAM4_LOW_LINK'] = "rtsp://192.168.1.13:554/user=admin&password=&channel=1&stream=1?.sdp";
         }
-
+        if ($settingsArrayNew['CAM1_MAN'] == "IPC") {
+            $settingsArrayNew['CAM1_LINK'] = "rtsp://admin:12345@192.168.1.10:554/live/main";
+            $settingsArrayNew['CAM1_LOW_LINK'] = "rtsp://admin:12345@192.168.1.10:554/live/sub";
+        }
+        if ($settingsArrayNew['CAM2_MAN'] == "IPC") {
+            $settingsArrayNew['CAM2_LINK'] = "rtsp://admin:12345@192.168.1.11:554/live/main";
+            $settingsArrayNew['CAM2_LOW_LINK'] = "rtsp://admin:12345@192.168.1.11:554/live/sub";
+        }
+        if ($settingsArrayNew['CAM3_MAN'] == "IPC") {
+            $settingsArrayNew['CAM3_LINK'] = "rtsp://admin:12345@192.168.1.12:554/live/main";
+            $settingsArrayNew['CAM3_LOW_LINK'] = "rtsp://admin:12345@192.168.1.12:554/live/sub";
+        }
+        if ($settingsArrayNew['CAM4_MAN'] == "IPC") {
+            $settingsArrayNew['CAM4_LINK'] = "rtsp://admin:12345@192.168.1.13:554/live/main";
+            $settingsArrayNew['CAM4_LOW_LINK'] = "rtsp://admin:12345@192.168.1.13:554/live/sub";
+        }
         if ($settingsArrayNew['CAM1_MAN'] == "DAHUA") {
             $settingsArrayNew['CAM1_LINK'] = "rtsp://admin:admin1234@192.168.1.10:554/cam/realmonitor?channel=1&subtype=0";
             $settingsArrayNew['CAM1_LOW_LINK'] = "rtsp://admin:admin1234@192.168.1.10:554/cam/realmonitor?channel=1&subtype=1";
@@ -454,7 +544,6 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
             $settingsArrayNew['CAM4_LINK'] = "rtsp://admin:admin1234@192.168.1.13:554/cam/realmonitor?channel=1&subtype=0";
             $settingsArrayNew['CAM4_LOW_LINK'] = "rtsp://admin:admin1234@192.168.1.13:554/cam/realmonitor?channel=1&subtype=1";
         }
-
         if ($settingsArrayNew['CAM1_MAN'] == "OTHER") {
             $settingsArrayNew['CAM1_LINK'] = "rtsp://admin:12345@192.168.1.10:554/ISAPI/Streaming/Channels/101";
             $settingsArrayNew['CAM1_LOW_LINK'] = "rtsp://admin:12345@192.168.1.10:554/ISAPI/Streaming/Channels/102";
@@ -471,7 +560,6 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
             $settingsArrayNew['CAM4_LINK'] = "rtsp://admin:12345@192.168.1.13:554/ISAPI/Streaming/Channels/101";
             $settingsArrayNew['CAM4_LOW_LINK'] = "rtsp://admin:12345@192.168.1.13:554/ISAPI/Streaming/Channels/102";
         }
-
 
 
         file_put_contents($settingsFile, json_encode($settingsArrayNew));
@@ -519,7 +607,6 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
             $settingsArrayNew['CAM4_LINK'] = "rtsp://192.168.1.13:554/user=admin&password=&channel=1&stream=0?.sdp";
             $settingsArrayNew['CAM4_LOW_LINK'] = "rtsp://192.168.1.13:554/user=admin&password=&channel=1&stream=1?.sdp";
         }
-
         if ($settingsArrayNew['CAM1_MAN'] == "DAHUA") {
             $settingsArrayNew['CAM1_LINK'] = "rtsp://admin:admin1234@192.168.1.10:554/cam/realmonitor?channel=1&subtype=0";
             $settingsArrayNew['CAM1_LOW_LINK'] = "rtsp://admin:admin1234@192.168.1.10:554/cam/realmonitor?channel=1&subtype=1";
@@ -536,7 +623,22 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
             $settingsArrayNew['CAM4_LINK'] = "rtsp://admin:admin1234@192.168.1.13:554/cam/realmonitor?channel=1&subtype=0";
             $settingsArrayNew['CAM4_LOW_LINK'] = "rtsp://admin:admin1234@192.168.1.13:554/cam/realmonitor?channel=1&subtype=1";
         }
-
+        if ($settingsArrayNew['CAM1_MAN'] == "IPC") {
+            $settingsArrayNew['CAM1_LINK'] = "rtsp://admin:12345@192.168.1.10:554/live/main";
+            $settingsArrayNew['CAM1_LOW_LINK'] = "rtsp://admin:12345@192.168.1.10:554/live/sub";
+        }
+        if ($settingsArrayNew['CAM2_MAN'] == "IPC") {
+            $settingsArrayNew['CAM2_LINK'] = "rtsp://admin:12345@192.168.1.11:554/live/main";
+            $settingsArrayNew['CAM2_LOW_LINK'] = "rtsp://admin:12345@192.168.1.11:554/live/sub";
+        }
+        if ($settingsArrayNew['CAM3_MAN'] == "IPC") {
+            $settingsArrayNew['CAM3_LINK'] = "rtsp://admin:12345@192.168.1.12:554/live/main";
+            $settingsArrayNew['CAM3_LOW_LINK'] = "rtsp://admin:12345@192.168.1.12:554/live/sub";
+        }
+        if ($settingsArrayNew['CAM4_MAN'] == "IPC") {
+            $settingsArrayNew['CAM4_LINK'] = "rtsp://admin:12345@192.168.1.13:554/live/main";
+            $settingsArrayNew['CAM4_LOW_LINK'] = "rtsp://admin:12345@192.168.1.13:554/live/sub";
+        }
         if ($settingsArrayNew['CAM1_MAN'] == "OTHER") {
             $settingsArrayNew['CAM1_LINK'] = "rtsp://admin:12345@192.168.1.10:554/ISAPI/Streaming/Channels/101";
             $settingsArrayNew['CAM1_LOW_LINK'] = "rtsp://admin:12345@192.168.1.10:554/ISAPI/Streaming/Channels/102";
@@ -845,6 +947,9 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
                                                 <option <?= $select_array['CAM1_MAN_DAHUA'] ?> value="DAHUA">
                                                     Bitrek(Dahua)
                                                 </option>
+                                                <option <?= $select_array['CAM1_MAN_IPC'] ?> value="IPC">
+                                                    Bitrek(IPC)
+                                                </option>
                                                 <option <?= $select_array['CAM1_MAN_OTHER'] ?> value="OTHER">Other
                                                 </option>
                                             </select>
@@ -878,6 +983,9 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
                                                 </option>
                                                 <option <?= $select_array['CAM2_MAN_DAHUA'] ?> value="DAHUA">
                                                     Bitrek(Dahua)
+                                                </option>
+                                                <option <?= $select_array['CAM2_MAN_IPC'] ?> value="IPC">
+                                                    Bitrek(IPC)
                                                 </option>
                                                 <option <?= $select_array['CAM2_MAN_OTHER'] ?> value="OTHER">Other
                                                 </option>
@@ -913,6 +1021,9 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
                                                 <option <?= $select_array['CAM3_MAN_DAHUA'] ?> value="DAHUA">
                                                     Bitrek(Dahua)
                                                 </option>
+                                                <option <?= $select_array['CAM3_MAN_IPC'] ?> value="IPC">
+                                                    Bitrek(IPC)
+                                                </option>
                                                 <option <?= $select_array['CAM3_MAN_OTHER'] ?> value="OTHER">Other
                                                 </option>
                                             </select>
@@ -946,6 +1057,9 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
                                                 </option>
                                                 <option <?= $select_array['CAM4_MAN_DAHUA'] ?> value="DAHUA">
                                                     Bitrek(Dahua)
+                                                </option>
+                                                <option <?= $select_array['CAM1_MAN_IPC'] ?> value="IPC">
+                                                    Bitrek(IPC)
                                                 </option>
                                                 <option <?= $select_array['CAM4_MAN_OTHER'] ?> value="OTHER">Other
                                                 </option>
@@ -997,7 +1111,7 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
 //                                            echo "<tr><td align='center' style='padding: 5px'><a href=\"http://" . $t["ip"] . "\"><b>" . $t["ip"] . "</b></a></td ><td align='center' style='padding: 5px'><input type='text' size='5' value=\"" . $t["manufacturer"] . "\"></td><td align='center' style='padding: 5px'>" . $t["serial"] . "</td><td align=\"center\"><select name=\"CAM" . $cur_cam . "_ASSIGN\"><option value=\"0\">――――</option><option value=\"1\">Camera 1</option><option value=\"2\">Camera 2</option><option value=\"3\">Camera 3</option><option value=\"4\">Camera 4</option></select></td></tr>";
 
                                         }
-                                        echo "</tr><tr><td align='center' colspan='10'><button style=\"width:120px;height:30px\" type=\"submit\" name=\"assign_save\">Set state!</button></td></tr>";
+                                        echo "</tr><tr><td align='center' colspan='10'><button style=\"width:120px;height:30px\" type=\"submit\" name=\"assign_save\">Apply!</button></td></tr>";
 
 //                                            echo "<tr><td align=\"center\" width='20%' bgcolor=\"#dddddd\"><a href=http://192.168.1.10><b style=\"color: black\">192.168.1.10</b></a></td><td align=\"center\" width='20%' bgcolor=\"#dddddd\"><b style=\"color: black\">Dahua</b></td><td align=\"center\" width='34%' bgcolor=\"#dddddd\"><p style=\"color: black\">5D02576PAG24219</p></td> <td align=\"center\"> <select name=\"CAM1_AS\"><option " . $select_array['CAM1_AS_1'] . " value=\"1\">1</option><option " . $select_array['CAM1_AS_2'] . "value=\"2\"> 2</option><option " . $select_array['CAM1_AS_3'] . " value=\"3\">3</option><option" . $select_array['CAM1_AS_4'] . " value=\"4\">4</option> </select></td></tr>";
 
