@@ -10,3 +10,4 @@ sudo -H -u www-data pip3 install --upgrade onvif_zeep
 sudo chmod -R 777 ~/.cache/
 ```
 # And cp *.py /scr/scripts/cameras
+# And cp cam_config.php to www
