@@ -262,7 +262,12 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
                 $settingsArrayNew['CAM4_MAN'] = 'XM';
             }
         } elseif ($toAssign["CAM1"][0] == "IPC") {
-            $temp = shell_exec('sudo bash /scr/scripts/cameras/onvif_set_ip.sh 12345 80 ' . $toAssign["CAM1"][1] . ' ' . $toAssign["CAM1"][2]);
+            $settingsArrayNew['SETTINGS_TYPE'] = 'KILL';
+            $settingsArrayNew['SCRIPT_NAME'] = "/scr/scripts/cameras/onvif_set_ip.py";
+            $settingsArrayNew['TIME_OUT'] = '10';
+            sendToTube("settings", json_encode($settingsArrayNew));
+
+            $temp = shell_exec('python3 /scr/scripts/cameras/onvif_set_ip.py admin 12345 80 ' . $toAssign["CAM1"][1] . ' ' . $toAssign["CAM1"][2]);
             if ($toAssign["CAM1"][2] == "192.168.1.10") {
                 $settingsArrayNew['CAM1_MAN'] = 'IPC';
             }
@@ -318,7 +323,11 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
                 $settingsArrayNew['CAM4_MAN'] = 'XM';
             }
         } elseif ($toAssign["CAM2"][0] == "IPC") {
-            $temp = shell_exec('sudo bash /scr/scripts/cameras/onvif_set_ip.sh 12345 80 ' . $toAssign["CAM2"][1] . ' ' . $toAssign["CAM2"][2]);
+            $settingsArrayNew['SETTINGS_TYPE'] = 'KILL';
+            $settingsArrayNew['SCRIPT_NAME'] = "/scr/scripts/cameras/onvif_set_ip.py";
+            $settingsArrayNew['TIME_OUT'] = '10';
+            sendToTube("settings", json_encode($settingsArrayNew));
+            $temp = shell_exec('python3 /scr/scripts/cameras/onvif_set_ip.py admin 12345 80 ' . $toAssign["CAM2"][1] . ' ' . $toAssign["CAM2"][2]);
             if ($toAssign["CAM2"][2] == "192.168.1.10") {
                 $settingsArrayNew['CAM1_MAN'] = 'IPC';
             }
@@ -374,7 +383,11 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
                 $settingsArrayNew['CAM4_MAN'] = 'XM';
             }
         } elseif ($toAssign["CAM3"][0] == "IPC") {
-            $temp = shell_exec('sudo bash /scr/scripts/cameras/onvif_set_ip.sh 12345 80 ' . $toAssign["CAM3"][1] . ' ' . $toAssign["CAM3"][2]);
+            $settingsArrayNew['SETTINGS_TYPE'] = 'KILL';
+            $settingsArrayNew['SCRIPT_NAME'] = "/scr/scripts/cameras/onvif_set_ip.py";
+            $settingsArrayNew['TIME_OUT'] = '10';
+            sendToTube("settings", json_encode($settingsArrayNew));
+            $temp = shell_exec('python3 /scr/scripts/cameras/onvif_set_ip.py admin 12345 80 ' . $toAssign["CAM3"][1] . ' ' . $toAssign["CAM3"][2]);
             if ($toAssign["CAM3"][2] == "192.168.1.10") {
                 $settingsArrayNew['CAM1_MAN'] = 'IPC';
             }
@@ -430,7 +443,11 @@ if (password_verify($PASSWORD, $_SESSION['auth'])) {
                 $settingsArrayNew['CAM4_MAN'] = 'XM';
             }
         } elseif ($toAssign["CAM4"][0] == "IPC") {
-            $temp = shell_exec('sudo bash /scr/scripts/cameras/onvif_set_ip.sh 12345 80 ' . $toAssign["CAM4"][1] . ' ' . $toAssign["CAM4"][2]);
+            $settingsArrayNew['SETTINGS_TYPE'] = 'KILL';
+            $settingsArrayNew['SCRIPT_NAME'] = "/scr/scripts/cameras/onvif_set_ip.py";
+            $settingsArrayNew['TIME_OUT'] = '10';
+            sendToTube("settings", json_encode($settingsArrayNew));
+            $temp = shell_exec('python3 /scr/scripts/cameras/onvif_set_ip.py admin 12345 80 ' . $toAssign["CAM4"][1] . ' ' . $toAssign["CAM4"][2]);
             if ($toAssign["CAM4"][2] == "192.168.1.10") {
                 $settingsArrayNew['CAM1_MAN'] = 'IPC';
             }
