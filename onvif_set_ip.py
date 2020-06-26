@@ -8,7 +8,7 @@ new_ip = str(sys.argv[5])
 print(old_ip, new_ip)
 
 
-mycam = ONVIFCamera(old_ip, port, login, password, 'wsdl')
+mycam = ONVIFCamera(old_ip, port, login, password, '/scr/scripts/cameras/wsdl')
 mycam.devicemgmt.SetNetworkInterfaces(dict(InterfaceToken='eth0', NetworkInterface=dict(
     IPv4=dict(Enabled=True, Manual=[dict(Address=new_ip, PrefixLength=24)], DHCP=False))))
 
