@@ -46,7 +46,7 @@ def check_info(ipList):
                 try:
                     mycam = pyonvif.OnvifCam(addr=i, port=j, usr='admin', pwd=k)
                     # print("ASD")
-                    print(mycam.connection)
+                    #print(mycam.connection)
                     try:
                         raw = mycam.execute("GET_DEVICE_INFO").decode()
                     except:
