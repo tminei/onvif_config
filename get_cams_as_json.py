@@ -3,18 +3,17 @@ import pyonvif
 # do this to install pyonvif to www-data
 # sudo mkdir /var/www/.local
 # sudo mkdir /var/www/.cache
-# sudo chown www-data /var/www/.local
-# sudo chown www-data /var/www/.cache
+# sudo chown www-data.www-data /var/www/.local
+# sudo chown www-data.www-data /var/www/.cache
 # sudo -H -u www-data pip3 install pyonvif[discovery]
 
 
 import json
 
-goodPorts = ["80"]
-passList = ["admin1234", ""]
+goodPorts = ["80", "8899"]
+passList = ["admin1234", "", "12345"]
 
 
-#
 def net_scan():
     output = subprocess.check_output("nmap 192.168.1.*", shell=True).decode().splitlines()
     iList = []
@@ -45,22 +44,12 @@ def check_info(ipList):
             for k in passList:
                 try:
                     mycam = pyonvif.OnvifCam(addr=i, port=j, usr='admin', pwd=k)
-                    # print("ASD")
-                    #print(mycam.connection)
-                    try:
-                        raw = mycam.execute("GET_DEVICE_INFO").decode()
-                    except:
-                        pass
-                    # print(raw)
+                    raw = mycam.execute("GET_DEVICE_INFO").decode()
                     if not "The requested URL was not found on this server" in raw:
                         infoList.append([i, j, str(raw[raw.find("Manufacturer") + 13:raw.find("</tds:Manufacturer>")]),
                                          str(raw[raw.find("SerialNumber") + 13:raw.find("</tds:SerialNumber>")])])
-                    else:
-                        print("asdad")
-
                 except:
                     pass
-
                 break
     return infoList
 
@@ -78,7 +67,6 @@ def get_manufactured(info):
             pass
         out_list.append(tempDict)
     return out_list
-
 
 
 print(json.dumps(get_manufactured(check_info(net_scan()))))
